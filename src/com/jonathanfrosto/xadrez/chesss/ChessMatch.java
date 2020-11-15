@@ -2,6 +2,7 @@ package com.jonathanfrosto.xadrez.chesss;
 
 import com.jonathanfrosto.xadrez.boardgame.Board;
 import com.jonathanfrosto.xadrez.boardgame.Piece;
+import com.jonathanfrosto.xadrez.boardgame.Position;
 import com.jonathanfrosto.xadrez.chesss.pieces.King;
 import com.jonathanfrosto.xadrez.chesss.pieces.Rook;
 
@@ -25,6 +26,30 @@ public class ChessMatch {
 
     private void placeNewPiece(char column, int row, Piece piece) {
         board.placePiece(piece, new ChessPosition(column, row).toPosition());
+    }
+
+    public ChessPiece performerChessMove(ChessPosition sourcePosition, ChessPosition targetPosition) {
+        Position source = sourcePosition.toPosition();
+        Position target = targetPosition.toPosition();
+        validateSourcePosition(source);
+        Piece capturedPiece = makeMove(source,target);
+        return (ChessPiece) capturedPiece;
+    }
+
+    private Piece makeMove(Position source, Position target){
+        Piece sourcePiece = board.removeAPiece(source);
+        Piece capturedPiece = board.removeAPiece(target);
+        board.placePiece(sourcePiece,target);
+        return capturedPiece;
+    }
+
+    private void validateSourcePosition(Position position){
+        if (!board.thereIsAPiece(position)){
+            throw new ChessException("Não há peça nessa posição");
+        }
+        if (!board.piece(position).isThereAnyPossibleMove()){
+            throw new ChessException("Não existem movimentos possíveis para a peça");
+        }
     }
 
     private void initialSetup() {

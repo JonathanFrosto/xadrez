@@ -1,6 +1,8 @@
 package com.jonathanfrosto.xadrez.chesss;
 
-public class ChessException extends RuntimeException {
+import com.jonathanfrosto.xadrez.boardgame.BoardException;
+
+public class ChessException extends BoardException {
     public ChessException(String message) {
         super(message);
     }

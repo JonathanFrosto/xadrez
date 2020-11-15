@@ -3,7 +3,7 @@ package com.jonathanfrosto.xadrez.chesss;
 import com.jonathanfrosto.xadrez.boardgame.Board;
 import com.jonathanfrosto.xadrez.boardgame.Piece;
 
-public class ChessPiece extends Piece {
+public abstract class ChessPiece extends Piece {
     private Color color;
 
     public ChessPiece(Board board, Color color) {
