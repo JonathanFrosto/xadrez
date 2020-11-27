@@ -7,11 +7,27 @@ import com.jonathanfrosto.xadrez.chesss.pieces.King;
 import com.jonathanfrosto.xadrez.chesss.pieces.Rook;
 
 public class ChessMatch {
+    private int turn;
+    private Color currentPlayer;
     private Board board;
 
     public ChessMatch() {
         this.board = new Board(8, 8);
+        turn = 1;
+        currentPlayer = Color.WHITE;
         initialSetup();
+    }
+
+    public int getTurn() {
+        return turn;
+    }
+
+    public Color getCurrentPlayer() {
+        return currentPlayer;
+    }
+
+    public void setCurrentPlayer(Color currentPlayer) {
+        this.currentPlayer = currentPlayer;
     }
 
     public ChessPiece[][] getPieces() {
@@ -28,25 +44,12 @@ public class ChessMatch {
         board.placePiece(piece, new ChessPosition(column, row).toPosition());
     }
 
-    public ChessPiece performerChessMove(ChessPosition sourcePosition, ChessPosition targetPosition) {
-        Position source = sourcePosition.toPosition();
-        Position target = targetPosition.toPosition();
-        validateSourcePosition(source);
-        validateTargetPosition(source,target);
-        Piece capturedPiece = makeMove(source,target);
-        return (ChessPiece) capturedPiece;
-    }
-
-    private Piece makeMove(Position source, Position target){
-        Piece sourcePiece = board.removeAPiece(source);
-        Piece capturedPiece = board.removeAPiece(target);
-        board.placePiece(sourcePiece,target);
-        return capturedPiece;
-    }
-
     private void validateSourcePosition(Position position){
         if (!board.thereIsAPiece(position)){
             throw new ChessException("Não há peça nessa posição");
+        }
+        if (currentPlayer != ((ChessPiece)board.piece(position)).getColor()){
+            throw new ChessException("Você não pode usar uma peça de outra cor");
         }
         if (!board.piece(position).isThereAnyPossibleMove()){
             throw new ChessException("Não existem movimentos possíveis para a peça");
@@ -59,10 +62,32 @@ public class ChessMatch {
         }
     }
 
+    public ChessPiece performerChessMove(ChessPosition sourcePosition, ChessPosition targetPosition) {
+        Position source = sourcePosition.toPosition();
+        Position target = targetPosition.toPosition();
+        validateSourcePosition(source);
+        validateTargetPosition(source,target);
+        Piece capturedPiece = makeMove(source,target);
+        nextTurn();
+        return (ChessPiece) capturedPiece;
+    }
+
+    private Piece makeMove(Position source, Position target){
+        Piece sourcePiece = board.removeAPiece(source);
+        Piece capturedPiece = board.removeAPiece(target);
+        board.placePiece(sourcePiece,target);
+        return capturedPiece;
+    }
+
     public boolean[][] possibleMoves(ChessPosition sourcePosition){
         Position position = sourcePosition.toPosition();
         validateSourcePosition(position);
         return board.piece(position).possibleMoves();
+    }
+
+    private void nextTurn(){
+        turn += 1;
+        currentPlayer = currentPlayer == Color.WHITE ? Color.BLACK : Color.WHITE;
     }
 
     private void initialSetup() {

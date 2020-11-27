@@ -1,6 +1,7 @@
 package com.jonathanfrosto.xadrez.application;
 
 import com.jonathanfrosto.xadrez.boardgame.Position;
+import com.jonathanfrosto.xadrez.chesss.ChessMatch;
 import com.jonathanfrosto.xadrez.chesss.ChessPiece;
 import com.jonathanfrosto.xadrez.chesss.ChessPosition;
 import com.jonathanfrosto.xadrez.chesss.Color;
@@ -81,5 +82,12 @@ public class UI {
             }
         }
         System.out.print(" ");
+    }
+
+    public static void printMatch(ChessMatch chessMatch){
+        printBoard(chessMatch.getPieces());
+        System.out.println();
+        System.out.println("Turn: " + chessMatch.getTurn());
+        System.out.println("Current Player: " + chessMatch.getCurrentPlayer());
     }
 }
