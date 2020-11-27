@@ -54,7 +54,7 @@ public class Rook extends ChessPiece {
     }
 
     private void verifyMovesHorizontal(int i, boolean[][] matMoves, Position position) {
-        position.setValues(this.position.getRow(), this.position.getColumn() + 1);
+        position.setValues(this.position.getRow(), this.position.getColumn() + i);
 
         while (getBoard().positionExists(position) && !getBoard().thereIsAPiece(position)) {
             matMoves[position.getRow()][position.getColumn()] = true;
