@@ -6,8 +6,8 @@ import com.jonathanfrosto.xadrez.chesss.ChessPiece;
 import com.jonathanfrosto.xadrez.chesss.ChessPosition;
 import com.jonathanfrosto.xadrez.chesss.Color;
 
-import java.util.InputMismatchException;
-import java.util.Scanner;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class UI {
 
@@ -84,8 +84,24 @@ public class UI {
         System.out.print(" ");
     }
 
-    public static void printMatch(ChessMatch chessMatch){
+    public static void printCapturedPieces(List<ChessPiece> captured){
+        List<ChessPiece> white = captured.stream().filter(el -> el.getColor() == Color.WHITE).collect(Collectors.toList());
+        List<ChessPiece> black = captured.stream().filter(el -> el.getColor() == Color.BLACK).collect(Collectors.toList());
+        System.out.println("Captured pieces:");
+        System.out.print("White: ");
+        System.out.print(ANSI_WHITE);
+        System.out.print(white);
+        System.out.println(ANSI_RESET);
+        System.out.print("Black: ");
+        System.out.print(ANSI_YELLOW);
+        System.out.print(black);
+        System.out.println(ANSI_RESET);
+    }
+
+    public static void printMatch(ChessMatch chessMatch, List<ChessPiece> chessPieces){
         printBoard(chessMatch.getPieces());
+        System.out.println();
+        printCapturedPieces(chessPieces);
         System.out.println();
         System.out.println("Turn: " + chessMatch.getTurn());
         System.out.println("Current Player: " + chessMatch.getCurrentPlayer());

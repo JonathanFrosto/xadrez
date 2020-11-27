@@ -6,10 +6,16 @@ import com.jonathanfrosto.xadrez.boardgame.Position;
 import com.jonathanfrosto.xadrez.chesss.pieces.King;
 import com.jonathanfrosto.xadrez.chesss.pieces.Rook;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ChessMatch {
     private int turn;
     private Color currentPlayer;
     private Board board;
+
+    private List<Piece> piecesOnTheBoard = new ArrayList<>();
+    private List<Piece> capturedPieces = new ArrayList<>();
 
     public ChessMatch() {
         this.board = new Board(8, 8);
@@ -40,10 +46,6 @@ public class ChessMatch {
         return mat;
     }
 
-    private void placeNewPiece(char column, int row, Piece piece) {
-        board.placePiece(piece, new ChessPosition(column, row).toPosition());
-    }
-
     private void validateSourcePosition(Position position){
         if (!board.thereIsAPiece(position)){
             throw new ChessException("Não há peça nessa posição");
@@ -62,6 +64,22 @@ public class ChessMatch {
         }
     }
 
+    private void nextTurn(){
+        turn += 1;
+        currentPlayer = currentPlayer == Color.WHITE ? Color.BLACK : Color.WHITE;
+    }
+
+    private Piece makeMove(Position source, Position target){
+        Piece sourcePiece = board.removeAPiece(source);
+        Piece capturedPiece = board.removeAPiece(target);
+        board.placePiece(sourcePiece,target);
+        if (capturedPiece != null){
+            piecesOnTheBoard.remove(capturedPiece);
+            capturedPieces.add(capturedPiece);
+        }
+        return capturedPiece;
+    }
+
     public ChessPiece performerChessMove(ChessPosition sourcePosition, ChessPosition targetPosition) {
         Position source = sourcePosition.toPosition();
         Position target = targetPosition.toPosition();
@@ -72,22 +90,15 @@ public class ChessMatch {
         return (ChessPiece) capturedPiece;
     }
 
-    private Piece makeMove(Position source, Position target){
-        Piece sourcePiece = board.removeAPiece(source);
-        Piece capturedPiece = board.removeAPiece(target);
-        board.placePiece(sourcePiece,target);
-        return capturedPiece;
-    }
-
     public boolean[][] possibleMoves(ChessPosition sourcePosition){
         Position position = sourcePosition.toPosition();
         validateSourcePosition(position);
         return board.piece(position).possibleMoves();
     }
 
-    private void nextTurn(){
-        turn += 1;
-        currentPlayer = currentPlayer == Color.WHITE ? Color.BLACK : Color.WHITE;
+    private void placeNewPiece(char column, int row, ChessPiece piece) {
+        board.placePiece(piece, new ChessPosition(column, row).toPosition());
+        piecesOnTheBoard.add(piece);
     }
 
     private void initialSetup() {
