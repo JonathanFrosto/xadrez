@@ -11,21 +11,21 @@ public class Pawn extends ChessPiece {
     }
 
     private void testMove(boolean[][] mat, Position p, int row) {
-        p.setValues(position.getRow() + row, position.getColumn());
+        p.setValues(this.position.getRow() + row, this.position.getColumn());
         if (getBoard().positionExists(p) && !getBoard().thereIsAPiece(p)) {
             mat[p.getRow()][p.getColumn()] = true;
 
-            p.setValues(position.getRow() + row + row, position.getColumn());
+            p.setValues(this.position.getRow() + row + row, this.position.getColumn());
             if (getBoard().positionExists(p) && !getBoard().thereIsAPiece(p) && getMoveCount() == 0) {
                 mat[p.getRow()][p.getColumn()] = true;
             }
         }
 
-        p.setValues(position.getRow() + row, position.getColumn() + 1);
+        p.setValues(this.position.getRow() + row, this.position.getColumn() + 1);
         if (getBoard().positionExists(p) && isThereOpponentPiece(p)) {
             mat[p.getRow()][p.getColumn()] = true;
         }
-        p.setValues(position.getRow() + row, position.getColumn() - 1);
+        p.setValues(this.position.getRow() + row, this.position.getColumn() - 1);
         if (getBoard().positionExists(p) && isThereOpponentPiece(p)) {
             mat[p.getRow()][p.getColumn()] = true;
         }
