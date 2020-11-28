@@ -15,22 +15,6 @@ public class Rook extends ChessPiece {
         return "R";
     }
 
-    @Override
-    public boolean[][] possibleMoves() {
-        boolean[][] mat = new boolean[getBoard().getRows()][getBoard().getColumns()];
-        Position p = new Position(0, 0);
-
-        //Above
-        verifyMovesVertical(1,mat,p);
-        //Below
-        verifyMovesVertical(-1, mat, p);
-        //Left
-        verifyMovesHorizontal(-1,mat,p);
-        //Right
-        verifyMovesHorizontal(1,mat,p);
-        return mat;
-    }
-
     private void verifyMovesVertical(int i, boolean[][] matMoves, Position position) {
         position.setValues(this.position.getRow() + i, this.position.getColumn());
 
@@ -55,5 +39,21 @@ public class Rook extends ChessPiece {
         if (getBoard().positionExists(position) && isThereOpponentPiece(position)) {
             matMoves[position.getRow()][position.getColumn()] = true;
         }
+    }
+
+    @Override
+    public boolean[][] possibleMoves() {
+        boolean[][] mat = new boolean[getBoard().getRows()][getBoard().getColumns()];
+        Position p = new Position(0, 0);
+
+        //Above
+        verifyMovesVertical(1,mat,p);
+        //Below
+        verifyMovesVertical(-1, mat, p);
+        //Left
+        verifyMovesHorizontal(-1,mat,p);
+        //Right
+        verifyMovesHorizontal(1,mat,p);
+        return mat;
     }
 }
