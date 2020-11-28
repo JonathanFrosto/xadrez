@@ -5,8 +5,8 @@ import com.jonathanfrosto.xadrez.boardgame.Position;
 import com.jonathanfrosto.xadrez.chesss.ChessPiece;
 import com.jonathanfrosto.xadrez.chesss.Color;
 
-public class Rook extends ChessPiece {
-    public Rook(Board board, Color color) {
+public class Queen extends ChessPiece {
+    public Queen(Board board, Color color) {
         super(board, color);
     }
 
@@ -36,12 +36,20 @@ public class Rook extends ChessPiece {
         testMove(0, -1, mat, p);
         //Right
         testMove(0, 1, mat, p);
+        //NE
+        testMove(-1, -1, mat, p);
+        //NO
+        testMove(-1, 1, mat, p);
+        //SE
+        testMove(1, -1, mat, p);
+        //SO
+        testMove(1, 1, mat, p);
 
         return mat;
     }
 
     @Override
     public String toString() {
-        return "R";
+        return "Q";
     }
 }
