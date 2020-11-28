@@ -5,14 +5,9 @@ import com.jonathanfrosto.xadrez.boardgame.Position;
 import com.jonathanfrosto.xadrez.chesss.ChessPiece;
 import com.jonathanfrosto.xadrez.chesss.Color;
 
-public class King extends ChessPiece {
-    public King(Board board, Color color) {
+public class Knight extends ChessPiece {
+    public Knight(Board board, Color color) {
         super(board, color);
-    }
-
-    @Override
-    public String toString() {
-        return "K";
     }
 
     private boolean canMove(Position position) {
@@ -32,23 +27,28 @@ public class King extends ChessPiece {
         boolean[][] mat = new boolean[getBoard().getRows()][getBoard().getColumns()];
         Position auxPosition = new Position(0, 0);
 
-        //Above
-        testMove(mat,auxPosition,-1,0);
-        //Below
-        testMove(mat,auxPosition,1,0);
-        //Left
-        testMove(mat,auxPosition,0,-1);
-        //Right
-        testMove(mat,auxPosition,0,1);
-        //NO
-        testMove(mat,auxPosition,-1,-1);
-        //NE
-        testMove(mat,auxPosition,-1,1);
-        //SO
-        testMove(mat,auxPosition,1,-1);
-        //SE
-        testMove(mat,auxPosition,1,1);
+        //Left-Up
+        testMove(mat,auxPosition,-1,-2);
+        //Left-Down
+        testMove(mat,auxPosition,1,-2);
+        //Right-Up
+        testMove(mat,auxPosition,-1,2);
+        //Right-Down
+        testMove(mat,auxPosition,1,2);
+        //Up-Left
+        testMove(mat,auxPosition,-2,-1);
+        //Up-Right
+        testMove(mat,auxPosition,-2,1);
+        //Down-Left
+        testMove(mat,auxPosition,2,-1);
+        //Down-Right
+        testMove(mat,auxPosition,2,1);
 
         return mat;
+    }
+
+    @Override
+    public String toString() {
+        return "C";
     }
 }
