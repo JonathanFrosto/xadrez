@@ -1,12 +1,13 @@
 package com.jonathanfrosto.xadrez.application;
 
-import com.jonathanfrosto.xadrez.boardgame.Position;
 import com.jonathanfrosto.xadrez.chesss.ChessMatch;
 import com.jonathanfrosto.xadrez.chesss.ChessPiece;
 import com.jonathanfrosto.xadrez.chesss.ChessPosition;
 import com.jonathanfrosto.xadrez.chesss.Color;
 
-import java.util.*;
+import java.util.InputMismatchException;
+import java.util.List;
+import java.util.Scanner;
 import java.util.stream.Collectors;
 
 public class UI {
@@ -69,7 +70,7 @@ public class UI {
     }
 
     public static void printPiece(ChessPiece piece, boolean background) {
-        if (background){
+        if (background) {
             System.out.print(ANSI_WHITE_BACKGROUND);
         }
         if (piece == null) {
@@ -84,7 +85,7 @@ public class UI {
         System.out.print(" ");
     }
 
-    public static void printCapturedPieces(List<ChessPiece> captured){
+    public static void printCapturedPieces(List<ChessPiece> captured) {
         List<ChessPiece> white = captured.stream().filter(el -> el.getColor() == Color.WHITE).collect(Collectors.toList());
         List<ChessPiece> black = captured.stream().filter(el -> el.getColor() == Color.BLACK).collect(Collectors.toList());
         System.out.println("Captured pieces:");
@@ -98,15 +99,21 @@ public class UI {
         System.out.println(ANSI_RESET);
     }
 
-    public static void printMatch(ChessMatch chessMatch, List<ChessPiece> chessPieces){
+    public static void printMatch(ChessMatch chessMatch, List<ChessPiece> chessPieces) {
         printBoard(chessMatch.getPieces());
         System.out.println();
         printCapturedPieces(chessPieces);
         System.out.println();
         System.out.println("Turn: " + chessMatch.getTurn());
-        System.out.println("Current Player: " + chessMatch.getCurrentPlayer());
-        if (chessMatch.isCheck()){
-            System.out.println("CHECK!");
+        if (!chessMatch.isCheckMate()) {
+            System.out.println("Current Player: " + chessMatch.getCurrentPlayer());
+            if (chessMatch.isCheck()) {
+                System.out.println("CHECK!");
+            }
+        }
+        else {
+            System.out.println("CHECKMATE!");
+            System.out.println("Vencedor: " + chessMatch.getCurrentPlayer());
         }
     }
 }
