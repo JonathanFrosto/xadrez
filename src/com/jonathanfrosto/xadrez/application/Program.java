@@ -6,6 +6,7 @@ import com.jonathanfrosto.xadrez.chesss.ChessMatch;
 import com.jonathanfrosto.xadrez.chesss.ChessPiece;
 import com.jonathanfrosto.xadrez.chesss.ChessPosition;
 
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.List;
@@ -40,7 +41,12 @@ public class Program {
 
                 if (chessMatch.getPromoted() != null){
                     System.out.println("Digite a peça para promoção (B/C/R/Q): ");
-                    String type = sc.nextLine();
+                    String type = sc.nextLine().toUpperCase();
+                    while (!type.equals("B") && !type.equals("C") && !type.equals("R") && !type.equals("Q")){
+                        System.out.println("Valor digitado não válido, digite novamente: ");
+                        type = sc.nextLine().toUpperCase();
+                    }
+
                     chessMatch.replacePromotedPiece(type);
                 }
 

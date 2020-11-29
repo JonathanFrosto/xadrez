@@ -5,7 +5,6 @@ import com.jonathanfrosto.xadrez.boardgame.Piece;
 import com.jonathanfrosto.xadrez.boardgame.Position;
 import com.jonathanfrosto.xadrez.chesss.pieces.*;
 
-import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -246,19 +245,19 @@ public class ChessMatch {
         return true;
     }
 
-    private ChessPiece newPiece(String type, Color color){
+    private ChessPiece newPiece(String type, Color color) {
         if (type.equals("B")) return new Bishop(board, color);
         if (type.equals("C")) return new Knight(board, color);
         if (type.equals("Q")) return new Queen(board, color);
         return new Rook(board, color);
     }
 
-    public ChessPiece replacePromotedPiece(String type){
-        if (promoted == null){
+    public ChessPiece replacePromotedPiece(String type) {
+        if (promoted == null) {
             throw new IllegalStateException("Não há peça para ser promovida");
         }
-        if (!type.equals("B") && !type.equals("C") && !type.equals("R") && !type.equals("Q")){
-            throw  new InvalidParameterException("Tipo inválido de peça");
+        if (!type.equals("B") && !type.equals("C") && !type.equals("R") && !type.equals("Q")) {
+            return promoted;
         }
 
         Position pos = promoted.getChessPosition().toPosition();
@@ -288,10 +287,10 @@ public class ChessMatch {
 
         //SpecialMove promotion
         promoted = null;
-        if (movedPiece instanceof Pawn){
+        if (movedPiece instanceof Pawn) {
             if ((movedPiece.getColor() == Color.WHITE && target.getRow() == 0) ||
-                    (movedPiece.getColor() == Color.BLACK && target.getRow() == 7)){
-                promoted = (ChessPiece)board.piece(target);
+                    (movedPiece.getColor() == Color.BLACK && target.getRow() == 7)) {
+                promoted = (ChessPiece) board.piece(target);
                 promoted = replacePromotedPiece("Q");
             }
         }
