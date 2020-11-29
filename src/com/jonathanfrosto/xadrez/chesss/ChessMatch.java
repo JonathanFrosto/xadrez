@@ -5,6 +5,7 @@ import com.jonathanfrosto.xadrez.boardgame.Piece;
 import com.jonathanfrosto.xadrez.boardgame.Position;
 import com.jonathanfrosto.xadrez.chesss.pieces.*;
 
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,6 +17,7 @@ public class ChessMatch {
     private boolean check;
     private boolean checkMate;
     private ChessPiece enPassant;
+    private ChessPiece promoted;
 
     private List<Piece> piecesOnTheBoard = new ArrayList<>();
     private List<Piece> capturedPieces = new ArrayList<>();
@@ -53,6 +55,10 @@ public class ChessMatch {
 
     public ChessPiece getEnPassant() {
         return enPassant;
+    }
+
+    public ChessPiece getPromoted() {
+        return promoted;
     }
 
     public ChessPiece[][] getPieces() {
@@ -118,10 +124,10 @@ public class ChessMatch {
         }
 
         // SpecialMove en Passant
-        if (sourcePiece instanceof Pawn){
-            if (source.getColumn() != target.getColumn() && capturedPiece == null){
+        if (sourcePiece instanceof Pawn) {
+            if (source.getColumn() != target.getColumn() && capturedPiece == null) {
                 Position pawnPosition;
-                if (sourcePiece.getColor() == Color.WHITE){
+                if (sourcePiece.getColor() == Color.WHITE) {
                     pawnPosition = new Position(target.getRow() + 1, target.getColumn());
                 } else {
                     pawnPosition = new Position(target.getRow() - 1, target.getColumn());
@@ -165,11 +171,11 @@ public class ChessMatch {
         }
 
         // SpecialMove en Passant
-        if (p instanceof Pawn){
-            if (source.getColumn() != target.getColumn() && capturedPiece == enPassant){
-                ChessPiece pawn = (ChessPiece)board.removeAPiece(target);
+        if (p instanceof Pawn) {
+            if (source.getColumn() != target.getColumn() && capturedPiece == enPassant) {
+                ChessPiece pawn = (ChessPiece) board.removeAPiece(target);
                 Position pawnPosition;
-                if (p.getColor() == Color.WHITE){
+                if (p.getColor() == Color.WHITE) {
                     pawnPosition = new Position(3, target.getColumn());
                 } else {
                     pawnPosition = new Position(4, target.getColumn());
@@ -240,6 +246,32 @@ public class ChessMatch {
         return true;
     }
 
+    private ChessPiece newPiece(String type, Color color){
+        if (type.equals("B")) return new Bishop(board, color);
+        if (type.equals("C")) return new Knight(board, color);
+        if (type.equals("Q")) return new Queen(board, color);
+        return new Rook(board, color);
+    }
+
+    public ChessPiece replacePromotedPiece(String type){
+        if (promoted == null){
+            throw new IllegalStateException("Não há peça para ser promovida");
+        }
+        if (!type.equals("B") && !type.equals("C") && !type.equals("R") && !type.equals("Q")){
+            throw  new InvalidParameterException("Tipo inválido de peça");
+        }
+
+        Position pos = promoted.getChessPosition().toPosition();
+        Piece p = board.removeAPiece(pos);
+        piecesOnTheBoard.remove(p);
+
+        ChessPiece newPiece = newPiece(type, promoted.getColor());
+        board.placePiece(newPiece, pos);
+        piecesOnTheBoard.add(newPiece);
+
+        return newPiece;
+    }
+
     public ChessPiece performerChessMove(ChessPosition sourcePosition, ChessPosition targetPosition) {
         Position source = sourcePosition.toPosition();
         Position target = targetPosition.toPosition();
@@ -253,6 +285,16 @@ public class ChessMatch {
         }
 
         ChessPiece movedPiece = (ChessPiece) board.piece(target);
+
+        //SpecialMove promotion
+        promoted = null;
+        if (movedPiece instanceof Pawn){
+            if ((movedPiece.getColor() == Color.WHITE && target.getRow() == 0) ||
+                    (movedPiece.getColor() == Color.BLACK && target.getRow() == 7)){
+                promoted = (ChessPiece)board.piece(target);
+                promoted = replacePromotedPiece("Q");
+            }
+        }
 
         check = testCheck(opponent(currentPlayer));
 
@@ -268,7 +310,7 @@ public class ChessMatch {
                 (target.getRow() == source.getRow() + 2)) {
             enPassant = movedPiece;
         } else {
-           enPassant = null;
+            enPassant = null;
         }
 
         return (ChessPiece) capturedPiece;
